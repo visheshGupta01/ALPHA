@@ -1,0 +1,1 @@
+CreateObject("Wscript.Shell").Run "D:\Projects\ALPHA\alpha.bat", 0,True
