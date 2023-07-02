@@ -1,34 +1,44 @@
-import os
-import subprocess as sp
-from AppOpener import run
-
-paths = {
-    'notepad': "C:\\Windows\\System32\\notepad.exe",
-    'calculator': "C:\\Windows\\System32\\calc.exe",
-    'vscode': "C:\\Users\\vishe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
-    'twitter': "C:\\Users\\vishe\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default\\Web Applications\\_crx__jgeocpdicgmkeemopbanhokmhcgcflmi\\Twitter.Ink"
-}
-
-
-def open_camera():
-    sp.run('start microsoft.windows.camera:', shell=True)
-
-
-def open_notepad():
-    os.startfile(paths['notepad'])
-
-
-def open_cmd():
-    os.system('start cmd')
-
-
-def open_calculator():
-    sp.Popen(paths['calculator'])
-
-
-def open_vscode():
-    os.startfile(paths['vscode'])
-
+from AppOpener import open
+from pynput.keyboard import Controller,Key
+import time
 
 def open_app(app):
-    run(app)
+    open(app)
+
+def increase_volume():
+    keyboard = Controller()
+    for i in range(10):
+        keyboard.press(Key.media_volume_up)
+        keyboard.release(Key.media_volume_up)
+        time.sleep(0.1)
+
+def decrease_volume():
+    keyboard = Controller()
+    for i in range(10):
+        keyboard.press(Key.media_volume_down)
+        keyboard.release(Key.media_volume_down)
+        time.sleep(0.1)
+
+def mute_volume():
+    keyboard = Controller()
+    keyboard.press(Key.media_volume_mute)
+    keyboard.release(Key.media_volume_mute)
+    time.sleep(0.1)
+
+def play_next():
+    keyboard = Controller()
+    keyboard.press(Key.media_next)
+    keyboard.release(Key.media_next)
+    time.sleep(0.1)
+
+def play_previous():
+    keyboard = Controller()
+    keyboard.press(Key.media_previous)
+    keyboard.release(Key.media_previous)
+    time.sleep(0.1)
+
+def pause():
+    keyboard = Controller()
+    keyboard.press(Key.media_play_pause)
+    keyboard.release(Key.media_play_pause)
+    time.sleep(0.1)

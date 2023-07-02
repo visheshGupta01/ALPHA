@@ -5,7 +5,8 @@ from email.message import EmailMessage
 import smtplib
 from decouple import config
 import wolframalpha
-
+import spotipy
+import webbrowser
 
 RAPID_API = config("RAPID_API")
 def ask_question(question): 
@@ -85,7 +86,6 @@ def get_latest_news():
 
 TMDB_API_KEY = config("TMDB_API_KEY")
 
-
 def get_trending_movies():
     trending_movies = []
     res = requests.get(
@@ -149,3 +149,21 @@ def get_a_quote(category):
     response = requests.request(
         "GET", url, headers=headers, params=querystring)
     return response
+
+
+USERNAME = config("USERNAME")
+CLIENTID = config('CLIENTID')
+CLIENTSECRET = config('CLIENTSECRET')
+REDIRECT_URI = config('REDIRECT_URI')
+
+def play_song(song_name):
+    oauth_object = spotipy.SpotifyOAuth(CLIENTID, CLIENTSECRET, REDIRECT_URI)
+    token_dict = oauth_object.get_access_token()
+    token = token_dict['access_token']
+    spotifyObject = spotipy.Spotify(auth=token)
+    results = spotifyObject.search(song_name, 1, 0, "track")
+    songs_dict = results['tracks']
+    song_items = songs_dict['items']
+    song = song_items[0]['external_urls']['spotify']
+    webbrowser.open(song)
+    

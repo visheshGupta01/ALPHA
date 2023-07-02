@@ -7,35 +7,31 @@ from utils import opening_text, hello
 import requests
 from functions.online_ops import find_my_ip, get_latest_news, get_random_advice, get_random_joke, get_trending_movies, \
     get_weather_report, play_on_youtube, search_on_google, search_on_wikipedia, send_email, send_whatsapp_message, \
-    ask_a_question, get_a_quote
-from functions.os_ops import open_app
+    ask_a_question, get_a_quote,play_song
+from functions.os_ops import open_app, decrease_volume,increase_volume,mute_volume,play_next,pause,play_previous
 from pprint import pprint
 from win10toast import ToastNotifier
 import os
-from ctypes import cast, POINTER
-from comtypes import CLSCTX_ALL
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-import math
 
 USERNAME = config('USER')
 BOTNAME = config('BOTNAME')
 
 toast = ToastNotifier()
-toast.show_toast("Alpha", "The process has been started", duration=30)
+toast.show_toast("Alpha", "The assistant will be started soon!!", duration=30)
 
-os.chdir("D:\Projects\ALPHA")  # type: ignore
+os.chdir("E:\Projects\ALPHA")  # type: ignore
 
 engine = pyttsx3.init('sapi5')
 
 # Set Rate
-engine.setProperty('rate', 190)
+engine.setProperty('rate', 150)
 
 # Set Volume
 engine.setProperty('volume', 1.0)
 
 # Set Voice (Male)
 voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[1].id)
+engine.setProperty('voice', voices[0].id)
 
 
 # Text to Speech Conversion
@@ -61,7 +57,7 @@ def greet_user():
     speak(f"I am {BOTNAME}. How may I assist you?")
 
 
-workingState = False
+workingState = True
 
 
 def take_user_input():
@@ -79,7 +75,7 @@ def take_user_input():
         query = r.recognize_google(audio, language='en-in')
         print(query)
 
-        if 'Alpha' in query:
+        if 'wake up Alpha' in query:
             speak('Yes sir, Alpha in your service!')
             workingState = True
         if "that's all" in query or "not now" in query or 'please wait alpha' in query:
@@ -93,7 +89,6 @@ def take_user_input():
 
 
 if __name__ == '__main__':
-    speak("Alpha is turning itself on sir")
     greet_user()
 
     while True:
@@ -104,7 +99,7 @@ if __name__ == '__main__':
             speak(choice(opening_text))
             open_app(app[1])
 
-        elif 'hello' in query and workingState == True or 'hai' in query and workingState == True:
+        elif 'hello' in query and workingState == True or 'hai' in query and workingState == True or 'hi' in query and workingState == True:
             speak(choice(hello))
 
         elif 'ip address' in query and workingState == True:
@@ -205,7 +200,7 @@ if __name__ == '__main__':
         elif 'ask' in query or 'math' in query and workingState == True:
             speak(choice(opening_text))
             speak('What do you want to ask, sir?')
-            question = take_user_input().lower()
+            question = take_user_input().lower() # type: ignore
             answer = ask_a_question(question)
             print(answer)
             if answer in locals():
@@ -226,9 +221,40 @@ if __name__ == '__main__':
         elif 'quote' in query and workingState == True:
             speak(choice(opening_text))
             speak("On what topic did you want a quote ,sir")
-            category = take_user_input().lower()
+            category = take_user_input().lower() # type: ignore
             if category == "random":
                 category = "all"
             quote = get_a_quote(category)
             speak("Here is a quote for you sir")
             speak(quote.text)
+        
+        elif 'increase volume' in query and workingState == True:
+            speak(choice(opening_text))
+            increase_volume()
+
+        elif 'decrease volume' in query and workingState == True:
+            speak(choice(opening_text))
+            decrease_volume()
+
+        elif 'mute volume' in query and workingState == True or 'unmute volume' in query and workingState == True:
+            speak(choice(opening_text))
+            mute_volume()
+
+        elif 'play next' in query and workingState == True:
+            speak(choice(opening_text))
+            play_next()
+
+        elif 'play previous' in query and workingState == True:
+            speak(choice(opening_text))
+            play_previous()
+            
+        elif 'pause' in query and workingState == True or 'pose' in query and workingState == True:
+            speak(choice(opening_text))
+            pause()
+
+        elif 'play song' in query and workingState == True:
+            speak(choice(opening_text))
+            speak("What is the name of the song you want to play?")
+            song_name = take_user_input().lower()
+            play_song(song_name)
+            speak("The song has been played")
